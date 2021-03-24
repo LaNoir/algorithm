@@ -126,6 +126,59 @@ void windblow() {
 	map[bottomstart][0] = -1;
 }
 
+/*
+up, down 을 각각 4개의 for문대신 하나의 for문으로 만든 버전
+void windblow() {
+	int x, y;
+	int newx, newy;
+	int d = 3;
+	x = 0;
+	y = topstart;
+
+	int temp = map[topstart][1];
+	int ktemp;
+	while (!(x == 0 && y == topstart - 1)) {
+		newx = x + dx[d];
+		newy = y + dy[d];
+
+		if (newx<0 || newx>C - 1 || newy<0 || newy>R - 1) {
+			d = (d + 1) % 4;
+			continue;
+		}
+		ktemp = map[newy][newx];
+		map[newy][newx] = temp;
+		temp = ktemp;
+
+		x = newx;
+		y = newy;
+	}
+
+	map[topstart][1] = 0;
+	map[topstart][0] = -1;
+
+	x = 0;
+	y = bottomstart;
+	d = 3;
+	while (!(x == 0 && y == bottomstart + 1)) {
+		newx = x + dx[d];
+		newy = y + dy[d];
+
+		if (newx<0 || newx>C - 1 || newy<0 || newy>R - 1) {
+			d = (d + 3) % 4;
+			continue;
+		}
+		ktemp = map[newy][newx];
+		map[newy][newx] = temp;
+		temp = ktemp;
+
+		x = newx;
+		y = newy;
+	}
+	map[bottomstart][1] = 0;
+	map[bottomstart][0] = -1;
+}
+*/
+
 int main() {
 
 	cin >> R >> C >> T;
