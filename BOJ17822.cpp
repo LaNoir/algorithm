@@ -17,118 +17,129 @@ int N, M, T;
 
 deque<int> board[51];
 
-int dx[4] = { 0,0, -1,1 };
-int dy[4] = { -1,1, 0,0 };
+int dx[4] = { 0,0,-1,1 };
+int dy[4] = { -1,1,0,0 };
 
-void rotate(int p_num, int direction) {
+
+void move(int f, int direction) {
+
 	if (direction == 0) {
-		board[p_num].push_front(board[p_num].back());
-		board[p_num].pop_back();
+		board[f].push_front(board[f].back());
+		board[f].pop_back();
 	}
+
 	else {
-		board[p_num].push_back(board[p_num].front());
-		board[p_num].pop_front();
+		board[f].push_back(board[f].front());
+		board[f].pop_front();
 	}
 }
 
-void solve(int p, int d, int k) {
+void solve(int f, int d, int k) {
 
-	int f = p;
+	int pick = f - 1 ;
 
-	//배수로 로테이션
-	while (f <= N) {
-		for(int i = 0; i<k; i++){
-		rotate(f, d);
+	//무브 완료
+
+	while (pick < N) {
+
+		for (int i = 0; i < k; i++) {
+			move(pick, d);
 		}
-		f += p;
+
+		pick = pick + f;
 	}
 
-	bool is_update = false;
-	bool check[51][50] = { false, };
+	// 값 찾기
 
-	for (int y = 1; y <= N; y++) {
-		for (int x = 0; x < M; x++) {
-			for (int d = 0; d < 4; d++) {
-				int ny = y + dy[d];
-				int nx = (x + dx[d] + M) % M;
-				if (ny<1 || ny>N) {
+	bool isUpdate = false;
+	bool check[50][50] = { false, };
+	int nx, ny, nd;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			for(int l = 0; l<4; l++){
+				nx = (j + dx[l] +M)%M;
+				ny = i + dy[l];
+				if (ny < 0 || ny >= N) {
 					continue;
 				}
-				if (board[y][x] != -1 && board[ny][nx] != -1 && board[y][x] == board[ny][nx]) {
-					is_update = true;
-					check[y][x] = true;
+
+				if (board[ny][nx] != -1 && board[i][j] != -1 && board[i][j] == board[ny][nx]) {
+					check[i][j] = true;
 					check[ny][nx] = true;
+					isUpdate = true;
 				}
+
 			}
 		}
 	}
 
+	if(isUpdate){
 
-	if (is_update) {
-		for (int y = 1; y <= N; y++) {
-			for (int x = 0; x < M; x++) {
-				if (check[y][x] == true) {
-					board[y][x] = -1;
-				}
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			if (check[i][j] == true) {
+				board[i][j] = -1;
 			}
 		}
+	}
 	}
 
 	else {
-		int sum = 0;
-		int count = 0;
-		for (int y = 1; y <= N; y++) {
-			for (int x = 0; x < M; x++) {
-				if (board[y][x] != -1) {
-					sum += board[y][x];
+		int sum=0, count=0;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				if (board[i][j] != -1) {
+					sum += board[i][j];
 					count++;
 				}
 			}
 		}
-		for (int y = 1; y <= N; y++) {
-			for (int x = 0; x < M; x++) {
-				if (board[y][x] != -1) {
-					if (board[y][x] * count > sum) {
-						board[y][x]--;
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				if (board[i][j] != -1) {
+					if (board[i][j] * count > sum) {
+						board[i][j] --;
 					}
-					else if (board[y][x] * count < sum) {
-						board[y][x] ++;
+					else if (board[i][j] * count < sum) {
+						board[i][j] ++;
 					}
 				}
 			}
 		}
 	}
 
-
 }
 
+
 int main() {
+
 	cin >> N >> M >> T;
 
-	for (int i = 1; i <= N; i++) {
-		int t;
-		for (int j = 0; j < M; j++) {
+	for (int y = 0; y < N; y++) {
+		for (int x = 0; x < M; x++) {
+			int t;
 			cin >> t;
-			board[i].push_back(t);
+			board[y].push_back(t);
 		}
 	}
 
-	int x, d, k;
+	int a, b, c;
+	while (T > 0) {
+	
+		cin >> a >> b >> c;
 
+		solve(a,b,c);
 
-	for (int i = 0; i < T; i++) {
-		cin >> x >> d >> k;
-		solve(x, d, k);
+		T--;
 	}
-
 	int res = 0;
-
-
-
-	for (int i = 1; i <= N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (board[i][j] != -1) {
-				res += board[i][j];
+	for (int y = 0; y < N; y++) {
+		for (int x = 0; x < M; x++) {
+			
+			if (board[y][x] != -1)
+			{
+				res += board[y][x];
 			}
 		}
 	}
