@@ -1,0 +1,116 @@
+#include <iostream>
+#include <deque>
+using namespace std;
+
+int N, M, T;
+deque<int> board[50];
+
+int dx[4] = { 0,0,1,-1 };
+int dy[4] = { 1,-1,0,0 };
+
+
+void rotate(int plate, int dir) {
+	//cout << plate << endl;;
+	if (dir == 0) {
+		board[plate].push_front(board[plate].back());
+		board[plate].pop_back();
+	}
+	else {
+		board[plate].push_back(board[plate].front());
+		board[plate].pop_front();
+	}
+}
+
+
+int main() {
+
+	cin >> N >> M >> T;
+	int num;
+	for (int y = 0; y < N; y++) {
+		for (int x = 0; x < M; x++) {
+			cin >> num;
+			board[y].push_back(num);
+		}
+	}
+
+	while (T) {
+		bool check[50][50] = { false, };
+		
+		T--;
+		int x, d, k;
+		cin >> x >> d >> k;
+		int sum=0, count=0;
+		bool isupdate = false;
+		for(int i = x-1; i<N; i+=x){
+			for(int j = 0; j<k; j++){
+				rotate(i, d);
+			}
+		}
+		//회전 끝
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < M; x++) {
+				if (board[y][x] != -1) {
+					sum += board[y][x];
+					count++;
+				}
+				int nx, ny;
+				for(int d = 0; d<4; d++){
+					nx = (x + dx[d] + M)%M;
+					ny = y + dy[d];
+
+					if (ny < 0 || ny >= N) {
+						continue;
+					}
+
+					if (board[y][x] == board[ny][nx] && board[y][x] != -1) {
+						check[ny][nx] = true;
+						check[y][x] = true;
+						isupdate = true;
+					}
+
+				}
+			}
+		}
+
+
+		if (isupdate) {
+			for (int y = 0; y < N; y++) {
+				for (int x = 0; x < M; x++) {
+					if (check[y][x] == true) {
+						board[y][x] = -1;
+					}
+				}
+			}
+		}
+
+		else {
+			float avg = (float)sum / (float)count;
+			for (int y = 0; y < N; y++) {
+				for (int x = 0; x < M; x++) {
+					if (board[y][x] > avg && board[y][x] != -1) {
+						board[y][x]--;
+					}
+					else if (board[y][x] < avg && board[y][x] != -1) {
+						board[y][x]++;
+					}
+				}
+			}
+		}
+
+		
+	}
+
+	int res = 0;
+
+	
+		
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			if (board[i][j] != -1) {
+				res += board[i][j];
+			}
+		}
+	}
+
+	cout << res;
+}
