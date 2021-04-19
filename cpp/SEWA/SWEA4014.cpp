@@ -3,7 +3,7 @@
 #include<iostream>
 #include <vector>
 using namespace std;
-//21"57'
+//21"57' -> 22"03'
 
 int N, X;
 int board[21][21];
