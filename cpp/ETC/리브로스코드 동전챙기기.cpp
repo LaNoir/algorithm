@@ -128,8 +128,8 @@ void dfs(int count) {
 
 		if (a < b && b < c) {
 			//이때만 돈다.
-			play();
-			//cout << a << " "<< b <<" " << c << endl;
+			//play();
+			cout << a << " "<< b <<" " << c << endl;
 		}
 
 		return;
