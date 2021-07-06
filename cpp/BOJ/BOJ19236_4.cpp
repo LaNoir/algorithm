@@ -55,11 +55,16 @@ void dfs(int board[4][4], FISH fish[16], int sharky, int sharkx, int sum) {
 		nx = tfish[i].x + dx[cd];
 		nd = tfish[i].d;
 
-		while (ny < 0 || nx < 0 || ny >= 4 || nx >= 4 || (ny == sharky && nx == sharkx)) {
-			nd = (nd + 1) % 8;
-			ny = cy + dy[nd];
-			nx = cx + dx[nd];
-		}
+    for(int d = 0; d<8; d++){
+
+        if(ny >=0 && nx>=0 && ny<4 && nx<4 && (ny != sharky || nx != sharkx)){
+            break;
+        }
+        nd = (nd + 1) % 8;
+		ny = cy + dy[nd];
+		nx = cx + dx[nd];
+    }
+		
 
 		if (tboard[ny][nx] == -1) {
 			tboard[cy][cx] = -1;
